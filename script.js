@@ -220,7 +220,7 @@
 //   callback(newObj);
 // };
 
-// // const createProduct = (obj, callback) => callback({ ...obj, id: Date.now() });
+// const createProduct = (obj, callback) => callback({ ...obj, id: Date.now() });
 
 // // function logProduct(product) {
 // //   console.log(product);
@@ -245,3 +245,21 @@
 // }
 
 // showArgs(1, 5, 8, 13, 2);
+
+//! ================================================
+
+//* Example 9 - Метод forEach
+// Виконайте рефакторинг коду за допомогою методу forEach та стрілочні функції.
+
+function calсulateAverage(...args) {
+  let total = 0;
+  //   for (let i = 0; i < args.length; i++) {
+  //     total += args[i];
+  //   }
+  args.forEach(el => (total += el));
+  return total / args.length;
+}
+
+console.log(calсulateAverage(1, 2, 3, 4)); // 2.5
+console.log(calсulateAverage(14, 8, 2)); // 8
+console.log(calсulateAverage(27, 43, 2, 8, 36)); // 23.2
