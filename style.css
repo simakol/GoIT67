@@ -1,0 +1,72 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: sans-serif;
+  height: 500vh;
+}
+
+.counter {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.counter.resize {
+  top: 200px;
+}
+
+.box {
+  margin: 0 8px;
+  border: 3px solid lime;
+  border-radius: 15px;
+  padding: 13px;
+}
+
+.input {
+  display: inline-block;
+  margin: 50px;
+}
+
+form {
+  width: 200px;
+  margin-left: 50px;
+  text-align: center;
+}
+
+legend {
+  font-size: 30px;
+}
+
+fieldset {
+  border-radius: 10px;
+  border-color: lime;
+  background-color: rgba(179, 174, 174, 0.421);
+}
+
+form label {
+  display: block;
+  margin: 10px;
+}
+
+form label input {
+  margin: 0 auto;
+  display: block;
+  margin-top: 10px;
+  border-radius: 8px;
+  outline: none;
+  padding: 8px;
+  border-color: orange;
+}
+
+.correct {
+  border-color: green;
+}
+
+.wrong {
+  border-color: red;
+}
