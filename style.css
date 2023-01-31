@@ -1,0 +1,49 @@
+body {
+  text-align: center;
+  font-family: sans-serif;
+  height: 200vh;
+}
+
+p {
+  font-size: 60px;
+  margin-top: 0px;
+}
+/* 1 task */
+/* 
+.button {
+  font-size: 40px;
+  background-color: rgb(219, 77, 77);
+  color: white;
+  border-radius: 15px;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.button.start {
+  background-color: rgb(77, 219, 82);
+}
+
+.button:disabled {
+  background-color: #c1c1c1;
+  cursor: not-allowed;
+} */
+
+/* 2 task */
+
+.button {
+  font-size: 40px;
+  color: white;
+  border-radius: 15px;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.button.stop {
+  background-color: rgb(219, 77, 77);
+}
+
+.button.start {
+  background-color: rgb(77, 219, 82);
+}
