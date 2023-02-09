@@ -1,9 +1,20 @@
-import fetchData from "./api.js";
+import NewsApiService from "./NewsApiService.js";
+import LoadMoreBtn from "./components/LoadMoreBtn.js";
 
 const form = document.getElementById("form");
 const newsWrapper = document.getElementById("newsWrapper");
 
+const newsApiService = new NewsApiService();
+const loadMoreBtn = new LoadMoreBtn({
+  selector: "#loadMore",
+  isHidden: true,
+});
+
+console.log(newsApiService);
+console.log(loadMoreBtn);
+
 form.addEventListener("submit", onSubmit);
+loadMoreBtn.button.addEventListener("click", fetchArticles);
 
 function onSubmit(e) {
   e.preventDefault();
@@ -11,8 +22,20 @@ function onSubmit(e) {
   const form = e.currentTarget;
   const value = form.elements.news.value.trim();
 
-  fetchData(value)
-    .then(({ articles }) => {
+  newsApiService.searchQuery = value;
+
+  newsApiService.resetPage();
+  clearNewsList();
+  loadMoreBtn.show();
+  fetchArticles().finally(() => form.reset());
+}
+
+function fetchArticles() {
+  loadMoreBtn.disable();
+
+  return newsApiService
+    .getNews()
+    .then((articles) => {
       if (articles.length === 0) throw new Error("No data");
 
       return articles.reduce(
@@ -20,13 +43,19 @@ function onSubmit(e) {
         ""
       );
     })
-    .then(updateNewsList)
-    .catch(onError)
-    .finally(() => form.reset());
+    .then((markup) => {
+      appendNewsToList(markup);
+      loadMoreBtn.enable();
+    })
+    .catch(onError);
 }
 
-function updateNewsList(markup) {
-  newsWrapper.innerHTML = markup;
+function appendNewsToList(markup) {
+  newsWrapper.insertAdjacentHTML("beforeend", markup);
+}
+
+function clearNewsList() {
+  newsWrapper.innerHTML = "";
 }
 
 function createMarkup({ author, title, description, url, urlToImage }) {
@@ -43,5 +72,6 @@ function createMarkup({ author, title, description, url, urlToImage }) {
 
 function onError(err) {
   console.error(err);
-  updateNewsList("<p>Articles not found</p>");
+  loadMoreBtn.hide();
+  appendNewsToList("<p>Articles not found</p>");
 }
