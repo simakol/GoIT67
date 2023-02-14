@@ -1,20 +1,18 @@
-import { save, load } from "./storage.js";
+import { saveTask, loadTasks, deleteTask, updateTask } from "./api.js";
 
-const STORAGE_KEY = "tasks";
-let currentId = 0;
+let currentId = 1;
 
 const myInput = document.getElementById("myInput");
 
 function fillTasksList() {
-  const currentState = load(STORAGE_KEY);
-  if (currentState !== undefined) {
-    currentState.forEach(({ text, isDone, id }) => createLI(text, isDone, id));
-
-    currentId =
-      currentState.length !== 0
-        ? currentState[currentState.length - 1].id + 1
-        : 0;
-  }
+  loadTasks()
+    .then((tasks) => {
+      tasks.forEach(({ text, isDone, id }) => createLI(text, isDone, id));
+      return tasks;
+    })
+    .then((tasks) => {
+      currentId = tasks.length !== 0 ? tasks[tasks.length - 1].id + 1 : 1;
+    });
 }
 
 function addNewTask() {
@@ -25,7 +23,7 @@ function addNewTask() {
   }
   createLI(inputValue);
   myInput.value = "";
-  addTaskToStorage(inputValue);
+  addTaskToDB(inputValue);
 }
 
 function createLI(text, isDone = false, id = currentId) {
@@ -39,21 +37,16 @@ function createLI(text, isDone = false, id = currentId) {
 }
 
 function handleTaskBehaviour({ target }) {
-  const currentState = load(STORAGE_KEY);
   if (target.tagName === "LI") {
     target.classList.toggle("checked");
-    const taskIndex = currentState.findIndex(
-      (task) => +task.id === +target.dataset.id
-    );
-    currentState[taskIndex].isDone = !currentState[taskIndex].isDone;
+    updateTask({
+      id: +target.dataset.id,
+      status: target.classList.contains("checked"),
+    });
   } else if (target.classList.contains("close")) {
     target.parentNode.remove();
-    const taskIndex = currentState.findIndex(
-      (task) => +task.id === +target.parentNode.dataset.id
-    );
-    currentState.splice(taskIndex, 1);
+    deleteTask(target.parentNode.dataset.id);
   }
-  save(STORAGE_KEY, currentState);
 }
 
 function addCross(target) {
@@ -68,18 +61,11 @@ function createTaskObject(text, isDone) {
   return {
     text,
     isDone,
-    id: currentId,
   };
 }
 
-function addTaskToStorage(text, isDone = false) {
-  const currentState = load(STORAGE_KEY);
-  if (currentState === undefined) {
-    save(STORAGE_KEY, [createTaskObject(text, isDone)]);
-  } else {
-    currentState.push(createTaskObject(text, isDone));
-    save(STORAGE_KEY, currentState);
-  }
+function addTaskToDB(text, isDone = false) {
+  saveTask(createTaskObject(text, isDone));
   currentId += 1;
 }
 
