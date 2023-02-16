@@ -30,24 +30,40 @@ function onSubmit(e) {
   fetchArticles().finally(() => form.reset());
 }
 
-function fetchArticles() {
+async function fetchArticles() {
   loadMoreBtn.disable();
 
-  return newsApiService
-    .getNews()
-    .then((articles) => {
-      if (articles.length === 0) throw new Error("No data");
+  try {
+    const articles = await newsApiService.getNews();
+    console.log("🚀 ~ articles", articles);
+    if (articles.length === 0) throw new Error("No data");
 
-      return articles.reduce(
-        (markup, article) => createMarkup(article) + markup,
-        ""
-      );
-    })
-    .then((markup) => {
-      appendNewsToList(markup);
-      loadMoreBtn.enable();
-    })
-    .catch(onError);
+    const markup = articles.reduce(
+      (markup, article) => createMarkup(article) + markup,
+      ""
+    );
+
+    appendNewsToList(markup);
+    loadMoreBtn.enable();
+  } catch (err) {
+    console.error(err);
+  }
+
+  // return newsApiService
+  //   .getNews()
+  //   .then((articles) => {
+  //     if (articles.length === 0) throw new Error("No data");
+
+  //     return articles.reduce(
+  //       (markup, article) => createMarkup(article) + markup,
+  //       ""
+  //     );
+  //   })
+  //   .then((markup) => {
+  //     appendNewsToList(markup);
+  //     loadMoreBtn.enable();
+  //   })
+  //   .catch(onError);
 }
 
 function appendNewsToList(markup) {

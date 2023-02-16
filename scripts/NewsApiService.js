@@ -11,15 +11,24 @@ export default class NewsApiService {
     this.searchQuery = "";
   }
 
-  getNews() {
+  async getNews() {
     const URL = `${ENDPOINT}?q=${this.searchQuery}&pageSize=5&page=${this.page}`;
 
-    return fetch(URL, options)
-      .then((response) => response.json())
-      .then(({ articles }) => {
-        this.nextPage();
-        return articles;
-      });
+    const response = await axios.get(URL, options);
+    this.nextPage();
+    return response.data.articles;
+
+    // return fetch(URL, options)
+    //   .then((response) => response.json())
+    //   .then(({ articles }) => {
+    //     this.nextPage();
+    //     return articles;
+    //   });
+
+    // return axios.get(URL, options).then(({ data }) => {
+    //   this.nextPage();
+    //   return data.articles;
+    // });
   }
 
   nextPage() {
